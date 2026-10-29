@@ -67,7 +67,12 @@ export const PayPalCheckoutModal: React.FC<PayPalCheckoutModalProps> = ({
         onSuccess(res.receipt);
       }, 600);
     } catch (err: any) {
-      setError(err.message || 'Authoritative capture failed');
+      const msg = err.message || '';
+      if (msg.includes('ORDER_NOT_APPROVED')) {
+        setError('Order not yet approved. Please click "Open PayPal Sandbox Popup Checkout" below to log in with your sandbox buyer account and approve payment, then click capture.');
+      } else {
+        setError(msg || 'Authoritative capture failed');
+      }
     } finally {
       setLoading(false);
     }

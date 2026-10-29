@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Invoice, PaymentIntent, TrustGuardEvaluation, AIChatMessage } from '@paypilot/shared';
 import { sendChatMessage } from '../api';
@@ -159,11 +160,10 @@ export const AICopilot: React.FC<AICopilotProps> = ({
           return (
             <div key={index} className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
               <div
-                className={`max-w-2xl rounded-2xl p-4 text-xs md:text-sm leading-relaxed ${
-                  isUser
+                className={`max-w-2xl rounded-2xl p-4 text-xs md:text-sm leading-relaxed ${isUser
                     ? 'bg-blue-600 text-white rounded-tr-none shadow-md shadow-blue-600/10'
                     : 'bg-slate-950/80 text-slate-200 border border-slate-800 rounded-tl-none space-y-3'
-                }`}
+                  }`}
               >
                 {/* Message text */}
                 <div className="whitespace-pre-line prose-invert">
