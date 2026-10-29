@@ -81,7 +81,7 @@ export class PayPalService {
       return {
         orderId: mockOrderId,
         status: 'CREATED',
-        approveUrl: `https://www.sandbox.paypal.com/checkoutnow?token=${mockOrderId}`,
+        approveUrl: `${config.paypal.checkoutUrl}?token=${mockOrderId}`,
       };
     }
 
@@ -123,8 +123,8 @@ export class PayPalService {
         brand_name: 'PayPilot AI',
         landing_page: 'NO_PREFERENCE',
         user_action: 'PAY_NOW',
-        return_url: `${config.clientUrl}/payment/success`,
-        cancel_url: `${config.clientUrl}/payment/cancel`,
+        return_url: config.paypal.returnUrl,
+        cancel_url: config.paypal.cancelUrl,
       },
     };
 

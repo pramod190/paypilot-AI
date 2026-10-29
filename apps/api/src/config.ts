@@ -4,22 +4,27 @@ import path from 'path';
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 dotenv.config();
 
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+const environment = (process.env.PAYPAL_ENVIRONMENT || 'sandbox').toLowerCase() as 'sandbox' | 'production';
+
 export const config = {
   port: parseInt(process.env.PORT || '4000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
-  clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
+  apiUrl: process.env.API_URL || 'http://localhost:4000',
+  clientUrl,
   databaseUrl: process.env.DATABASE_URL || 'file:./dev.db',
   
   paypal: {
     clientId: process.env.PAYPAL_CLIENT_ID || '',
     clientSecret: process.env.PAYPAL_CLIENT_SECRET || '',
-    environment: (process.env.PAYPAL_ENVIRONMENT || 'sandbox').toLowerCase() as 'sandbox' | 'production',
+    environment,
     webhookId: process.env.PAYPAL_WEBHOOK_ID || '',
-    get baseUrl() {
-      return this.environment === 'production'
-        ? 'https://api-m.paypal.com'
-        : 'https://api-m.sandbox.paypal.com';
-    }
+    baseUrl: environment === 'production'
+      ? (process.env.PAYPAL_PROD_API_BASE_URL || 'https://api-m.paypal.com')
+      : (process.env.PAYPAL_API_BASE_URL || 'https://api-m.sandbox.paypal.com'),
+    checkoutUrl: process.env.PAYPAL_CHECKOUT_URL || 'https://www.sandbox.paypal.com/checkoutnow',
+    returnUrl: process.env.PAYPAL_RETURN_URL || `${clientUrl}/payment/success`,
+    cancelUrl: process.env.PAYPAL_CANCEL_URL || `${clientUrl}/payment/cancel`,
   },
 
   ai: {
@@ -31,4 +36,3 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET || 'paypilot-jwt-dev-secret-2026',
   sessionSecret: process.env.SESSION_SECRET || 'paypilot-session-secret',
 };
-

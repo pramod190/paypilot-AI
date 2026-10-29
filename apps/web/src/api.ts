@@ -1,6 +1,6 @@
 import { Invoice, PaymentIntent, TrustGuardEvaluation, Transaction, AIChatMessage } from '@paypilot/shared';
 
-const API_BASE = '/api';
+const API_BASE = (import.meta as any).env?.VITE_API_BASE_URL || '/api';
 
 export async function fetchConfig() {
   const res = await fetch(`${API_BASE}/config`);
