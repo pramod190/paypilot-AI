@@ -1,17 +1,32 @@
 import React from 'react';
-import { ShieldCheck, Sparkles, FileText, CreditCard, History, Terminal, CheckCircle2 } from 'lucide-react';
+import {
+  CreditCard,
+  FileText,
+  Sparkles,
+  History,
+  ShieldCheck,
+  Settings,
+  Layers,
+} from 'lucide-react';
 
 interface NavbarProps {
   currentTab: string;
   setCurrentTab: (tab: string) => void;
   isPayPalConfigured: boolean;
+  onOpenSettings: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, isPayPalConfigured }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  currentTab,
+  setCurrentTab,
+  isPayPalConfigured,
+  onOpenSettings,
+}) => {
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: CreditCard },
+    { id: 'dashboard', label: 'Overview', icon: CreditCard },
     { id: 'invoices', label: 'Invoices', icon: FileText },
     { id: 'copilot', label: 'AI Copilot', icon: Sparkles },
+    { id: 'payments', label: 'Payments', icon: Layers },
     { id: 'transactions', label: 'Transactions', icon: History },
     { id: 'audit', label: 'TrustGuard Audit', icon: ShieldCheck },
   ];
@@ -41,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, isPay
           </div>
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex space-x-1">
+          <nav className="hidden lg:flex space-x-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
@@ -49,38 +64,46 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, setCurrentTab, isPay
                 <button
                   key={item.id}
                   onClick={() => setCurrentTab(item.id)}
-                  className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
                     isActive
-                      ? 'bg-blue-600/10 text-blue-400 border border-blue-500/30 shadow-sm'
+                      ? 'bg-blue-600/15 text-blue-400 border border-blue-500/30 shadow-sm'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : 'text-slate-500'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-400' : 'text-slate-500'}`} />
                   <span>{item.label}</span>
                 </button>
               );
             })}
           </nav>
 
-          {/* Right Status Badges */}
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+          {/* Right Status Badges & Settings */}
+          <div className="flex items-center space-x-2.5">
+            <div className="flex items-center space-x-2 px-2.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>PayPal Sandbox</span>
+              <span className="text-[11px] font-semibold">PayPal Sandbox</span>
             </div>
 
-            <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700 text-xs text-slate-300">
-              <div className="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center text-[10px]">
+            <button
+              onClick={onOpenSettings}
+              title="System Settings & Diagnostics"
+              className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition"
+            >
+              <Settings className="w-4 h-4" />
+            </button>
+
+            <div className="hidden sm:flex items-center space-x-2 px-2.5 py-1 rounded-lg bg-slate-800/60 border border-slate-700/80 text-xs text-slate-300">
+              <div className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center text-[9px]">
                 AM
               </div>
-              <span className="font-semibold text-slate-200">Alex Mercer</span>
+              <span className="font-semibold text-slate-200 text-xs">Alex Mercer</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Mobile nav */}
-      <div className="md:hidden flex overflow-x-auto px-4 py-2 border-t border-slate-800/60 bg-slate-900/50 space-x-2">
+      <div className="lg:hidden flex overflow-x-auto px-4 py-2 border-t border-slate-800/60 bg-slate-900/50 space-x-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentTab === item.id;

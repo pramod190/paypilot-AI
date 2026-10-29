@@ -9,6 +9,93 @@ import { AIChatMessage } from '@paypilot/shared';
 
 const STOP_WORDS = new Set(['invoice', 'payment', 'services', 'service', 'month', 'monthly', 'bill', 'billing', 'cloud', 'account', 'please', 'prepare', 'paid']);
 
+export const AI_AGENT_TOOLS = [
+  {
+    name: 'parse_payment_request',
+    description: 'Extracts structured payment information (amount, currency, recipient, purpose) from natural language',
+    parameters: {
+      type: 'object',
+      properties: {
+        amount: { type: 'number', description: 'Monetary amount' },
+        currency: { type: 'string', description: 'ISO currency code (USD, EUR, GBP, CAD, AUD)' },
+        recipient: { type: 'string', description: 'Recipient name or organization' },
+        purpose: { type: 'string', description: 'Description or reason for payment' },
+      },
+      required: ['amount', 'recipient'],
+    },
+  },
+  {
+    name: 'get_invoice_details',
+    description: 'Retrieves authoritative invoice records from the database',
+    parameters: {
+      type: 'object',
+      properties: {
+        invoiceId: { type: 'string', description: 'Invoice ID' },
+        invoiceNumber: { type: 'string', description: 'Invoice number' },
+      },
+    },
+  },
+  {
+    name: 'get_payment_policy',
+    description: 'Executes TrustGuard policy engine evaluation on a payment intent',
+    parameters: {
+      type: 'object',
+      properties: {
+        intentId: { type: 'string', description: 'Payment Intent ID to evaluate' },
+      },
+      required: ['intentId'],
+    },
+  },
+  {
+    name: 'check_duplicate_invoice',
+    description: 'Checks whether an invoice has potential duplicates or was already paid',
+    parameters: {
+      type: 'object',
+      properties: {
+        invoiceId: { type: 'string', description: 'Invoice ID to evaluate for duplicates' },
+      },
+      required: ['invoiceId'],
+    },
+  },
+  {
+    name: 'prepare_payment_intent',
+    description: 'Creates a validated PaymentIntent in the database with 15-minute expiration',
+    parameters: {
+      type: 'object',
+      properties: {
+        invoiceId: { type: 'string', description: 'Optional associated invoice ID' },
+        amount: { type: 'number', description: 'Amount to pay' },
+        currency: { type: 'string', description: 'Currency code' },
+        recipient: { type: 'string', description: 'Recipient' },
+        purpose: { type: 'string', description: 'Payment purpose' },
+      },
+      required: ['amount', 'recipient'],
+    },
+  },
+  {
+    name: 'get_transaction_history',
+    description: 'Retrieves authoritative completed transaction history and receipts',
+    parameters: {
+      type: 'object',
+      properties: {
+        limit: { type: 'number', description: 'Maximum number of transactions to return' },
+      },
+    },
+  },
+  {
+    name: 'request_payment_approval',
+    description: 'Presents an approved proposal to the user for explicit confirmation',
+    parameters: {
+      type: 'object',
+      properties: {
+        intentId: { type: 'string', description: 'Payment Intent ID' },
+        intentVersion: { type: 'number', description: 'Version to approve' },
+      },
+      required: ['intentId', 'intentVersion'],
+    },
+  },
+];
+
 export class AIService {
   private static geminiClient = config.ai.geminiApiKey
     ? new GoogleGenerativeAI(config.ai.geminiApiKey)

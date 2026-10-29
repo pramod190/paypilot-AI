@@ -24,3 +24,4 @@ router.post('/chat', async (req: AuthenticatedRequest, res, next) => {
 });
 
 export default router;
+

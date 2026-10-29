@@ -51,3 +51,4 @@
   > "Finally, let's test safety: If we attempt to pay the same hosting bill again, TrustGuard immediately blocks it: 'Invoice is already marked as PAID.'
   >
   > Real AI understanding, deterministic TrustGuard policies, and authoritative PayPal Sandbox execution. That's PayPilot AI."
+

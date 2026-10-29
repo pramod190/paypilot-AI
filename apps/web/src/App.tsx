@@ -3,9 +3,11 @@ import { Navbar } from './components/Navbar';
 import { Dashboard } from './components/Dashboard';
 import { InvoiceManager } from './components/InvoiceManager';
 import { AICopilot } from './components/AICopilot';
+import { PaymentsView } from './components/PaymentsView';
 import { TransactionsView } from './components/TransactionsView';
 import { AuditTrailView } from './components/AuditTrailView';
 import { ReceiptModal } from './components/ReceiptModal';
+import { SettingsModal } from './components/SettingsModal';
 import { fetchInvoices, fetchTransactions, fetchConfig, fetchReceipt } from './api';
 import { Invoice } from '@paypilot/shared';
 
@@ -16,6 +18,7 @@ export function App() {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [initialPrompt, setInitialPrompt] = useState<string | undefined>(undefined);
   const [activeReceipt, setActiveReceipt] = useState<any | null>(null);
+  const [showSettings, setShowSettings] = useState<boolean>(false);
   const [config, setConfig] = useState<any>({ isPayPalConfigured: false });
 
   const loadData = async () => {
@@ -68,6 +71,7 @@ export function App() {
           setCurrentTab(tab);
         }}
         isPayPalConfigured={config.isPayPalConfigured}
+        onOpenSettings={() => setShowSettings(true)}
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -100,6 +104,16 @@ export function App() {
           />
         )}
 
+        {currentTab === 'payments' && (
+          <PaymentsView
+            onSelectTab={setCurrentTab}
+            onPaymentCompleted={(receipt) => {
+              setActiveReceipt(receipt);
+              loadData();
+            }}
+          />
+        )}
+
         {currentTab === 'transactions' && (
           <TransactionsView
             transactions={transactions}
@@ -116,6 +130,11 @@ export function App() {
           receipt={activeReceipt}
           onClose={() => setActiveReceipt(null)}
         />
+      )}
+
+      {/* Settings Modal */}
+      {showSettings && (
+        <SettingsModal onClose={() => setShowSettings(false)} />
       )}
 
       {/* Footer */}

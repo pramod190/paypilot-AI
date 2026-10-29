@@ -47,3 +47,4 @@ export async function authMiddleware(req: AuthenticatedRequest, res: Response, n
     res.status(500).json({ error: 'Authentication initialization failure' });
   }
 }
+

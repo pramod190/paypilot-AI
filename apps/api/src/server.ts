@@ -9,6 +9,7 @@ import intentRoutes from './routes/intent.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
 import transactionRoutes from './routes/transaction.routes.js';
 import auditRoutes from './routes/audit.routes.js';
+import webhookRoutes from './routes/webhook.routes.js';
 import { PayPalService } from './services/paypal.service.js';
 
 export const app = express();
@@ -40,6 +41,9 @@ app.get('/api/config', (req, res) => {
   });
 });
 
+// PayPal Webhooks (public endpoint for PayPal server callbacks)
+app.use('/api/webhooks', webhookRoutes);
+
 // Authenticated API routes
 app.use('/api', authMiddleware);
 app.use('/api/ai', aiRoutes);
@@ -59,3 +63,4 @@ if (process.env.NODE_ENV !== 'test') {
     console.log(`🤖 AI Provider: ${config.ai.geminiApiKey ? 'Gemini API' : (config.ai.openaiApiKey ? 'OpenAI API' : 'Deterministic High-Precision Engine')}`);
   });
 }
+

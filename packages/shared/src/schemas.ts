@@ -64,3 +64,4 @@ export const AIChatRequestSchema = z.object({
   })).optional().default([]),
   contextInvoiceId: z.string().optional().nullable(),
 });
+

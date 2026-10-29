@@ -186,3 +186,4 @@ export const PayPalCheckoutModal: React.FC<PayPalCheckoutModalProps> = ({
     </div>
   );
 };
+

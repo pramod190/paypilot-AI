@@ -31,3 +31,4 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET || 'paypilot-jwt-dev-secret-2026',
   sessionSecret: process.env.SESSION_SECRET || 'paypilot-session-secret',
 };
+

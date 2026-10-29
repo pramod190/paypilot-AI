@@ -7,3 +7,4 @@ export const prisma = new PrismaClient({
 export async function disconnectPrisma() {
   await prisma.$disconnect();
 }
+

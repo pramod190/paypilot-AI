@@ -80,3 +80,4 @@ stateDiagram-v2
 2. **Authoritative Amount & Currency Match**: The server compares the captured amount and currency against the database intent. Any discrepancy throws an immediate validation exception.
 3. **Idempotent Storage**: Orders and capture IDs have unique database constraints preventing duplicate processing.
 4. **Authoritative Receipts**: Receipts render authoritative capture IDs, PayPal Order IDs, and timestamps directly from the authoritative PayPal response.
+

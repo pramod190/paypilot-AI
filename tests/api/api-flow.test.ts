@@ -3,6 +3,7 @@ import request from 'supertest';
 import { app } from '../../apps/api/src/server.js';
 import { prisma } from '../../apps/api/src/prisma.js';
 import { seedDatabase } from '../../apps/api/src/seed.js';
+import { AI_AGENT_TOOLS } from '../../apps/api/src/services/ai.service.js';
 
 describe('PayPilot AI Complete End-to-End Workflow', () => {
   const demoUserId = 'demo-user-001';
@@ -183,20 +184,26 @@ describe('PayPilot AI Complete End-to-End Workflow', () => {
   });
 
   it('8. Enforces idempotency: Duplicate capture requests return authoritative existing transaction', async () => {
-    // Get existing transaction
     const tx = await prisma.transaction.findFirst({
       where: { intent: { userId: demoUserId } },
     });
     expect(tx).toBeDefined();
 
-    // Verify GET /api/transactions returns this transaction
+    // Verify GET /api/transactions
     const txsRes = await request(app)
       .get('/api/transactions')
       .set('x-user-id', demoUserId);
 
     expect(txsRes.status).toBe(200);
     expect(txsRes.body.length).toBeGreaterThan(0);
-    expect(txsRes.body.some((t: any) => t.id === tx?.id)).toBe(true);
+
+    // Verify GET /api/transactions/:id
+    const txRes = await request(app)
+      .get(`/api/transactions/${tx?.id}`)
+      .set('x-user-id', demoUserId);
+
+    expect(txRes.status).toBe(200);
+    expect(txRes.body.id).toBe(tx?.id);
 
     // Verify GET /api/transactions/:id/receipt
     const receiptRes = await request(app)
@@ -219,5 +226,44 @@ describe('PayPilot AI Complete End-to-End Workflow', () => {
     const eventTypes = auditRes.body.map((e: any) => e.eventType);
     expect(eventTypes).toContain('INTENT_APPROVED');
     expect(eventTypes).toContain('TRUSTGUARD_CHECK_PASSED');
+  });
+
+  it('10. POST /api/webhooks/paypal processes authoritative PayPal webhook events', async () => {
+    const mockWebhookPayload = {
+      id: 'WH-TEST-2026-EVENT-99',
+      event_type: 'PAYMENT.CAPTURE.COMPLETED',
+      resource_type: 'capture',
+      summary: 'Payment capture completed for testing',
+      resource: {
+        id: 'CAP-TEST-WH-001',
+        amount: { value: '24.99', currency_code: 'USD' },
+      },
+    };
+
+    const webhookRes = await request(app)
+      .post('/api/webhooks/paypal')
+      .send(mockWebhookPayload);
+
+    expect(webhookRes.status).toBe(200);
+    expect(webhookRes.body.received).toBe(true);
+
+    // Verify webhook was recorded in audit log
+    const auditRes = await request(app)
+      .get('/api/audit/recent')
+      .set('x-user-id', demoUserId);
+
+    expect(auditRes.body.some((e: any) => e.eventType === 'WEBHOOK_PAYMENT_CAPTURE_COMPLETED')).toBe(true);
+  });
+
+  it('11. Verifies that all 7 required narrowly scoped AI tools are defined and configured', () => {
+    const toolNames = AI_AGENT_TOOLS.map((t) => t.name);
+    expect(toolNames).toContain('parse_payment_request');
+    expect(toolNames).toContain('get_invoice_details');
+    expect(toolNames).toContain('get_payment_policy');
+    expect(toolNames).toContain('check_duplicate_invoice');
+    expect(toolNames).toContain('prepare_payment_intent');
+    expect(toolNames).toContain('get_transaction_history');
+    expect(toolNames).toContain('request_payment_approval');
+    expect(AI_AGENT_TOOLS.length).toBe(7);
   });
 });

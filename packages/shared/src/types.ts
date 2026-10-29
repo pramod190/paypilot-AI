@@ -127,3 +127,4 @@ export interface AIToolCall {
   arguments: Record<string, any>;
   result?: any;
 }
+

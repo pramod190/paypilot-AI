@@ -122,3 +122,4 @@ if (process.argv[1]?.includes('seed.ts') || process.argv[1]?.includes('seed')) {
       await prisma.$disconnect();
     });
 }
+
