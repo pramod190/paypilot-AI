@@ -35,7 +35,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose }) => {
             </div>
             <div>
               <h3 className="text-sm font-bold text-white">System Settings & Status</h3>
-              <p className="text-[11px] text-slate-400 font-mono">PayPal AI Hackathon 2026</p>
+              <p className="text-[11px] text-slate-400 font-mono">PayPilot System Diagnostics</p>
             </div>
           </div>
           <button
@@ -142,3 +142,4 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose }) => {
     </div>
   );
 };
+

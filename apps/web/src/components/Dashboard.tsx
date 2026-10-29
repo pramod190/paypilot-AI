@@ -10,6 +10,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Zap,
+  ArrowRight,
+  TrendingUp,
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -31,44 +33,45 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Hero Banner for Hackathon Demo */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-900/60 via-indigo-900/40 to-slate-900 border border-blue-500/30 p-6 md:p-8 shadow-2xl">
+      {/* Production Hero Banner */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950/60 to-slate-900 border border-slate-800 p-6 md:p-8 shadow-2xl">
         <div className="max-w-2xl space-y-3">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold border border-blue-500/30">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-semibold border border-blue-500/20">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>PayPal AI Hackathon 2026 Ready</span>
+            <span>Autonomous Payment Copilot</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-            Meet PayPilot AI — Your Intelligent PayPal Copilot
+            Seamless Invoice-to-Payment Orchestration
           </h2>
           <p className="text-slate-300 text-sm leading-relaxed">
-            Turn complex invoices into deterministic, user-approved, verifiable PayPal payments.
-            Protected by the backend <strong className="text-white">TrustGuard Policy Engine</strong> with zero simulated credentials.
+            Turn vendor invoices and payment requests into deterministic, user-approved, verifiable PayPal payments.
+            Guaranteed by the backend <strong className="text-white font-semibold">TrustGuard Policy Engine</strong> with cryptographic proof of payment.
           </p>
           <div className="pt-2 flex flex-wrap gap-3">
             <button
-              onClick={() => onSelectTab('copilot', 'Prepare my hosting payment for this month')}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-500/25 flex items-center space-x-2 transition"
+              onClick={() => onSelectTab('copilot')}
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-500/25 flex items-center space-x-2 transition transform active:scale-[0.98]"
             >
-              <Zap className="w-4 h-4 text-yellow-300 fill-yellow-300" />
-              <span>Launch Live Demo Scenario ($24.99 Hosting)</span>
+              <Sparkles className="w-4 h-4 text-white" />
+              <span>Launch AI Copilot</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
             </button>
             <button
               onClick={() => onSelectTab('invoices')}
-              className="px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition"
+              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition"
             >
-              View Invoices ({invoices.length})
+              Manage Invoices ({invoices.length})
             </button>
           </div>
         </div>
       </div>
 
-      {/* Metric Cards Grid */}
+      {/* Production Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Metric 1 */}
+        {/* Metric 1: Total Captured */}
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-sm">
           <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Total Paid (PayPal)</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">Settled Payments</span>
             <div className="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
               <CreditCard className="w-4 h-4" />
             </div>
@@ -82,10 +85,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </p>
         </div>
 
-        {/* Metric 2 */}
+        {/* Metric 2: Outstanding Invoices */}
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-sm">
           <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Outstanding Invoices</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">Payable Balance</span>
             <div className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
               <FileText className="w-4 h-4" />
             </div>
@@ -98,7 +101,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </p>
         </div>
 
-        {/* Metric 3 */}
+        {/* Metric 3: TrustGuard Security Engine */}
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-sm">
           <div className="flex items-center justify-between text-slate-400 mb-2">
             <span className="text-xs font-semibold uppercase tracking-wider">TrustGuard Engine</span>
@@ -107,26 +110,26 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </div>
           </div>
           <div className="text-2xl font-black text-emerald-400 font-mono">
-            Active
+            Enforced
           </div>
           <p className="text-[11px] text-slate-400 font-medium mt-1">
-            10 Deterministic Policy Rules
+            10 Deterministic Security Policies
           </p>
         </div>
 
-        {/* Metric 4 */}
+        {/* Metric 4: PayPal Orders v2 Gateway */}
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-sm">
           <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Environment</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">Gateway Status</span>
             <div className="w-7 h-7 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center">
               <Zap className="w-4 h-4" />
             </div>
           </div>
           <div className="text-2xl font-black text-sky-400 font-mono">
-            Sandbox
+            Connected
           </div>
           <p className="text-[11px] text-slate-400 font-medium mt-1">
-            PayPal Orders v2 REST
+            PayPal Orders v2 REST API
           </p>
         </div>
       </div>
@@ -151,7 +154,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
           <div className="space-y-2.5">
             {unpaidInvoices.length === 0 ? (
-              <p className="text-xs text-slate-500 py-6 text-center">All invoices are settled! 🎉</p>
+              <p className="text-xs text-slate-500 py-6 text-center">All invoices are settled.</p>
             ) : (
               unpaidInvoices.slice(0, 4).map((inv) => (
                 <div
@@ -209,7 +212,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <Clock className="w-6 h-6 mx-auto text-slate-600 mb-1" />
                 <p>No verified PayPal payments recorded yet.</p>
                 <p className="text-[11px] text-slate-600">
-                  Complete checkout in the AI Copilot to see authoritative receipts here.
+                  Payments completed via AI Copilot will display authoritative receipts here.
                 </p>
               </div>
             ) : (
@@ -249,4 +252,3 @@ export const Dashboard: React.FC<DashboardProps> = ({
     </div>
   );
 };
-

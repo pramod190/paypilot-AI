@@ -51,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   AI
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium">PayPal AI Hackathon 2026</p>
+              <p className="text-[10px] text-slate-400 font-medium">Automated Payment Operations</p>
             </div>
           </div>
 

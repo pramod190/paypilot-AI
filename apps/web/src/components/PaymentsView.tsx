@@ -156,3 +156,4 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ onSelectTab, onPayme
     </div>
   );
 };
+

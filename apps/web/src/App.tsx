@@ -140,7 +140,7 @@ export function App() {
       {/* Footer */}
       <footer className="border-t border-slate-900 py-6 px-4 text-center text-xs text-slate-500">
         <p>
-          PayPilot AI — PayPal AI Hackathon 2026 Submission. Built with PayPal Orders v2 REST API & TrustGuard Policy Engine.
+          PayPilot AI — Automated Invoice & Payment Copilot powered by PayPal Orders v2 REST API & TrustGuard Policy Engine.
         </p>
       </footer>
     </div>
