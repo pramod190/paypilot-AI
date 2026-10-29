@@ -126,6 +126,25 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose }) => {
                   Version binding guarantees that tampering with approved amounts immediately invalidates authorization.
                 </p>
               </div>
+
+              {/* Reset Data for Testing */}
+              <div className="bg-slate-950/70 rounded-2xl p-4 border border-slate-800 flex items-center justify-between">
+                <div>
+                  <span className="font-bold text-white text-xs block">Reset Invoices</span>
+                  <span className="text-slate-500 text-[11px]">Reset all invoices back to UNPAID for re-testing.</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await fetch('/api/invoices/reset', { method: 'POST' });
+                    alert('Invoices have been reset to UNPAID! You can now test paying AWS Cloud Services again.');
+                    window.location.reload();
+                  }}
+                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold transition"
+                >
+                  Reset to Unpaid
+                </button>
+              </div>
             </>
           )}
 
