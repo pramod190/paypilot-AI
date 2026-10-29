@@ -54,6 +54,7 @@ export const ApprovePaymentIntentSchema = z.object({
 
 export const CapturePaymentSchema = z.object({
   paypalOrderId: z.string().min(5, 'Valid PayPal Order ID is required'),
+  forceInstantCapture: z.boolean().optional(),
 });
 
 export const AIChatRequestSchema = z.object({

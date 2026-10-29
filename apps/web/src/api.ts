@@ -106,11 +106,15 @@ export async function createPayPalOrder(intentId: string): Promise<{ orderId: st
   return res.json();
 }
 
-export async function capturePayPalPayment(intentId: string, paypalOrderId: string): Promise<{ success: boolean; transaction: Transaction; receipt: any }> {
+export async function capturePayPalPayment(
+  intentId: string,
+  paypalOrderId: string,
+  forceInstantCapture?: boolean
+): Promise<{ success: boolean; transaction: Transaction; receipt: any }> {
   const res = await fetch(`${API_BASE}/payments/${intentId}/capture`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ paypalOrderId }),
+    body: JSON.stringify({ paypalOrderId, forceInstantCapture }),
   });
   if (!res.ok) {
     const err = await res.json();

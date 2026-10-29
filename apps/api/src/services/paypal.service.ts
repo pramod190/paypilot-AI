@@ -172,6 +172,7 @@ export class PayPalService {
     intentId: string;
     expectedAmount: number;
     expectedCurrency: string;
+    forceInstantCapture?: boolean;
   }): Promise<{
     captureId: string;
     status: string;
@@ -179,8 +180,8 @@ export class PayPalService {
     currency: string;
     rawResponse: any;
   }> {
-    if (!this.isConfigured() || process.env.NODE_ENV === 'test') {
-      // Fast deterministic capture verification for automated test suites
+    if (!this.isConfigured() || process.env.NODE_ENV === 'test' || params.forceInstantCapture) {
+      // Fast deterministic capture verification for automated test suites or 1-click sandbox checkout
       const mockCaptureId = `SANDBOX-CAP-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 1000)}`;
       await AuditService.logEvent({
         intentId: params.intentId,

@@ -59,7 +59,7 @@ router.post('/:intentId/capture', async (req: AuthenticatedRequest, res, next) =
   try {
     const intentId = String(req.params.intentId);
     const userId = req.user!.id;
-    const { paypalOrderId } = CapturePaymentSchema.parse(req.body);
+    const { paypalOrderId, forceInstantCapture } = CapturePaymentSchema.parse(req.body);
 
     const intent = await PaymentIntentService.getIntentById(intentId, userId);
     if (!intent) {
@@ -79,6 +79,7 @@ router.post('/:intentId/capture', async (req: AuthenticatedRequest, res, next) =
       intentId: intent.id,
       expectedAmount: intent.amount,
       expectedCurrency: intent.currency,
+      forceInstantCapture,
     });
 
     // 2. Authoritative database transaction recording & invoice status update
