@@ -84,8 +84,8 @@ export const AICopilot: React.FC<AICopilotProps> = ({
   };
 
   const handleIntentUpdated = (updatedIntent: PaymentIntent, evaluation?: TrustGuardEvaluation) => {
-    setMessages((prev) =>
-      prev.map((msg) => {
+    setMessages((prev) => {
+      const updatedList = prev.map((msg) => {
         if (msg.paymentIntent && msg.paymentIntent.id === updatedIntent.id) {
           return {
             ...msg,
@@ -94,8 +94,20 @@ export const AICopilot: React.FC<AICopilotProps> = ({
           };
         }
         return msg;
-      })
-    );
+      });
+
+      if (updatedIntent.status === 'REJECTED') {
+        return [
+          ...updatedList,
+          {
+            role: 'assistant',
+            content: `❌ Payment intent for **${updatedIntent.recipient}** ($${updatedIntent.amount.toFixed(2)} ${updatedIntent.currency}) has been **rejected and cancelled**. No funds were moved or authorized. You can select another invoice or prepare a new payment anytime.`,
+          },
+        ];
+      }
+
+      return updatedList;
+    });
   };
 
   const quickPrompts = [

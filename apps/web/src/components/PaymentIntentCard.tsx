@@ -248,6 +248,11 @@ export const PaymentIntentCard: React.FC<PaymentIntentCardProps> = ({
               <CheckCircle className="w-4 h-4" />
               <span>Paid & Authoritatively Verified via PayPal Sandbox</span>
             </div>
+          ) : isRejected ? (
+            <div className="w-full py-3 px-4 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 text-xs font-semibold flex items-center justify-center space-x-2">
+              <XCircle className="w-4 h-4 text-rose-400" />
+              <span>Payment Intent Cancelled & Rejected by User</span>
+            </div>
           ) : isApproved ? (
             <div className="space-y-2">
               <button
@@ -279,9 +284,9 @@ export const PaymentIntentCard: React.FC<PaymentIntentCardProps> = ({
               <button
                 onClick={handleReject}
                 disabled={loading}
-                className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs rounded-xl border border-slate-700 transition"
+                className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 disabled:bg-slate-900 disabled:text-slate-600 text-slate-300 font-semibold text-xs rounded-xl border border-slate-700 transition"
               >
-                Reject
+                {loading ? 'Rejecting...' : 'Reject'}
               </button>
             </div>
           )}
