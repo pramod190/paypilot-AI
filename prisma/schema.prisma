@@ -1,0 +1,99 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id          String         @id @default(uuid())
+  email       String         @unique
+  name        String
+  createdAt   DateTime       @default(now())
+  invoices    Invoice[]
+  intents     PaymentIntent[]
+  auditEvents AuditEvent[]
+}
+
+model Invoice {
+  id             String          @id @default(uuid())
+  userId         String
+  user           User            @relation(fields: [userId], references: [id])
+  invoiceNumber  String
+  vendor         String
+  amount         Float
+  currency       String          @default("USD")
+  billingPeriod  String
+  dueDate        String
+  description    String
+  status         String          @default("UNPAID")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  paymentIntents PaymentIntent[]
+
+  @@unique([userId, invoiceNumber, vendor])
+  @@index([userId, status])
+}
+
+model PaymentIntent {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  invoiceId   String?
+  invoice     Invoice?      @relation(fields: [invoiceId], references: [id])
+  amount      Float
+  currency    String        @default("USD")
+  recipient   String
+  purpose     String
+  status      String        @default("DRAFT")
+  version     Int           @default(1)
+  expiresAt   DateTime
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  approvals   Approval[]
+  transaction Transaction?
+  auditEvents AuditEvent[]
+
+  @@index([userId, status])
+}
+
+model Approval {
+  id            String        @id @default(uuid())
+  intentId      String
+  intent        PaymentIntent @relation(fields: [intentId], references: [id], onDelete: Cascade)
+  approvedBy    String
+  intentVersion Int
+  approvedAt    DateTime      @default(now())
+
+  @@unique([intentId, intentVersion])
+}
+
+model Transaction {
+  id            String        @id @default(uuid())
+  intentId      String        @unique
+  intent        PaymentIntent @relation(fields: [intentId], references: [id])
+  paypalOrderId String        @unique
+  captureId     String        @unique
+  amount        Float
+  currency      String
+  status        String        @default("COMPLETED")
+  rawResponse   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model AuditEvent {
+  id          String         @id @default(uuid())
+  userId      String?
+  user        User?          @relation(fields: [userId], references: [id])
+  intentId    String?
+  intent      PaymentIntent? @relation(fields: [intentId], references: [id])
+  eventType   String
+  safeDetails String
+  createdAt   DateTime       @default(now())
+
+  @@index([intentId])
+  @@index([eventType])
+}

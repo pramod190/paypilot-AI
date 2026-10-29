@@ -1,0 +1,40 @@
+{
+  "name": "paypilot-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An AI payment copilot that turns invoices and natural-language requests into secure, user-approved, verifiable PayPal payments.",
+  "workspaces": [
+    "packages/shared",
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"API,WEB\" -c \"blue,green\" \"npm run dev --workspace=apps/api\" \"npm run dev --workspace=apps/web\"",
+    "build": "npm run build --workspace=packages/shared && npm run build --workspace=apps/api && npm run build --workspace=apps/web",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prisma:generate": "npm run prisma:generate --workspace=apps/api",
+    "prisma:migrate": "npm run prisma:migrate --workspace=apps/api",
+    "prisma:seed": "npm run prisma:seed --workspace=apps/api",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "paypal",
+    "ai",
+    "fintech",
+    "copilot",
+    "invoicing",
+    "hackathon",
+    "trustguard"
+  ],
+  "author": "PayPilot AI Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "dotenv": "^16.4.7",
+    "supertest": "^7.0.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7"
+  }
+}
