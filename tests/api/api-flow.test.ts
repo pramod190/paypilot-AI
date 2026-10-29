@@ -99,6 +99,14 @@ describe('PayPilot AI Complete End-to-End Workflow', () => {
     expect(orderRes.body.orderId).toBeDefined();
     const paypalOrderId = orderRes.body.orderId;
 
+    // Verify safe retry / re-mount: calling /order while in CHECKOUT_PENDING succeeds
+    const retryOrderRes = await request(app)
+      .post(`/api/payments/${intentId}/order`)
+      .set('x-user-id', demoUserId);
+
+    expect(retryOrderRes.status).toBe(200);
+    expect(retryOrderRes.body.orderId).toBeDefined();
+
     // Step D: Authoritative Server Capture
     const captureRes = await request(app)
       .post(`/api/payments/${intentId}/capture`)

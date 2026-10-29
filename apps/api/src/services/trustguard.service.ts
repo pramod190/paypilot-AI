@@ -259,10 +259,17 @@ export class TrustGuardService {
       throw new Error(`TrustGuard Policy Violation: ${evaluation.explanation}`);
     }
 
-    // Must be in APPROVED state
-    const intent = await prisma.paymentIntent.findUnique({ where: { id: intentId } });
-    if (!intent || intent.status !== 'APPROVED') {
+    // Must be in APPROVED or CHECKOUT_PENDING state with explicit approval
+    const intent = await prisma.paymentIntent.findUnique({
+      where: { id: intentId },
+      include: { approvals: true },
+    });
+    if (!intent || (intent.status !== 'APPROVED' && intent.status !== 'CHECKOUT_PENDING')) {
       throw new Error(`Cannot checkout intent in state '${intent?.status}'. Intent must be explicitly APPROVED by user.`);
+    }
+
+    if (!intent.approvals || intent.approvals.length === 0) {
+      throw new Error('Cannot checkout intent: No explicit approval record found.');
     }
   }
 }
