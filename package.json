@@ -1,0 +1,49 @@
+{
+  "name": "paypilot-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An AI payment copilot that turns invoices and natural-language requests into secure, user-approved, verifiable PayPal payments.",
+  "workspaces": [
+    "packages/shared",
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"API,WEB\" -c \"blue,green\" \"npm run dev --workspace=apps/api\" \"npm run dev --workspace=apps/web\"",
+    "build": "npm run build --workspace=packages/shared && npm run build --workspace=apps/api && npm run build --workspace=apps/web",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prisma:seed": "npm run prisma:seed --workspace=apps/api",
+    "lint": "npm run build --workspace=packages/shared && tsc --noEmit -p apps/api && tsc --noEmit -p apps/web",
+    "postinstall": "prisma generate --schema prisma/schema.prisma",
+    "start": "npm start --workspace=apps/api",
+    "db:generate": "prisma generate --schema prisma/schema.prisma",
+    "db:migrate": "prisma migrate deploy --schema prisma/schema.prisma",
+    "db:migrate:dev": "prisma migrate dev --schema prisma/schema.prisma",
+    "db:seed": "npm run prisma:seed --workspace=apps/api",
+    "test:sandbox": "vitest run tests/integration"
+  },
+  "keywords": [
+    "paypal",
+    "ai",
+    "fintech",
+    "copilot",
+    "invoicing",
+    "hackathon",
+    "trustguard"
+  ],
+  "author": "PayPilot AI Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "concurrently": "^9.1.2",
+    "dotenv": "^16.4.7",
+    "jsdom": "^30.1.3",
+    "supertest": "^7.0.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7"
+  }
+}
