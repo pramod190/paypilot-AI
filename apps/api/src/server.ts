@@ -61,16 +61,19 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: [config.clientUrl],
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    const normalizedClient = config.clientUrl.replace(/\/$/, '');
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    if (normalizedOrigin === normalizedClient || normalizedOrigin.includes('localhost') || normalizedOrigin.includes('onrender.com')) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
   credentials: true,
 }));
 
 app.use(express.json({ limit: '100kb' }));
-
-// Root route redirects to /api/health for convenience
-app.get('/', (_req, res) => {
-  res.redirect('/api/health');
-});
 
 // Public health & config routes
 app.get('/api/health', async (_req, res) => {
@@ -117,14 +120,29 @@ app.use('/api/insights', insightsRoutes);
 
 // Production: serve the built React app from this same service (one deployable unit)
 if (process.env.NODE_ENV === 'production') {
-  const webDist = process.env.WEB_DIST || 
-    (fs.existsSync(path.resolve(process.cwd(), 'apps/web/dist'))
-      ? path.resolve(process.cwd(), 'apps/web/dist')
-      : path.resolve(__dirname, '../../web/dist'));
-  if (fs.existsSync(webDist)) {
+  const possiblePaths = [
+    process.env.WEB_DIST,
+    path.resolve(process.cwd(), 'apps/web/dist'),
+    path.resolve(process.cwd(), '../web/dist'),
+    path.resolve(__dirname, '../../web/dist'),
+    path.resolve(__dirname, '../../../apps/web/dist'),
+    path.resolve(__dirname, '../../apps/web/dist'),
+  ].filter(Boolean) as string[];
+
+  const webDist = possiblePaths.find(p => fs.existsSync(p));
+
+  if (webDist) {
+    console.log(`📦 Serving React frontend from: ${webDist}`);
     app.use(express.static(webDist));
     app.get(/^(?!\/api\/).*/, (_req, res) => res.sendFile(path.join(webDist, 'index.html')));
+  } else {
+    console.warn('⚠️ Web dist not found in possible locations:', possiblePaths);
   }
+} else {
+  // In development, redirect root to /api/health
+  app.get('/', (_req, res) => {
+    res.redirect('/api/health');
+  });
 }
 
 // Central error handler
